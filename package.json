@@ -1,0 +1,38 @@
+{
+  "name": "dev-interactive-code",
+  "displayName": "Interactive Code Viewer",
+  "description": "Interactive Code Viewer is a VSCode extension that enables interactive code viewing directly within the editor. Simply open a text file containing code, and use the Enter key to display each line sequentially. Perfect for code walkthroughs, presentations, and interactive learning.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.87.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "dev-interactive-code.interactiveCodeViewer",
+        "title": "Interactive Code"
+      }
+    ]
+  },
+  "activationEvents": [
+    "onCommand:dev-interactive-code.interactiveCodeViewer"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.87.0",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "18.x",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3",
+    "@vscode/test-cli": "^0.0.8",
+    "@vscode/test-electron": "^2.3.9"
+  }
+}
