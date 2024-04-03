@@ -36,5 +36,5 @@
     "@vscode/test-electron": "^2.3.9"
   },
   "repository": "https://github.com/Grey-Hat-Guy/Interactive-Code-Viewer",
-  "publisher": "Grey_Hat"
+  "publisher": "grey_hat"
 }
