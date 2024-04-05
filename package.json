@@ -1,6 +1,7 @@
 {
   "name": "dev-interactive-code",
   "displayName": "Interactive Code Viewer",
+  "publisher": "GreyHat",
   "description": "Interactive Code Viewer is a VSCode extension that enables interactive code viewing directly within the editor. Simply open a text file containing code, and use the Enter key to display each line sequentially. Perfect for code walkthroughs, presentations, and interactive learning.",
   "version": "0.0.1",
   "engines": {
@@ -35,6 +36,5 @@
     "@vscode/test-cli": "^0.0.8",
     "@vscode/test-electron": "^2.3.9"
   },
-  "repository": "https://github.com/Grey-Hat-Guy/Interactive-Code-Viewer",
-  "publisher": "grey_hat"
+  "repository": "https://github.com/Grey-Hat-Guy/Interactive-Code-Viewer"
 }
