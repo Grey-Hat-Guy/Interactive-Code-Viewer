@@ -1,45 +1,81 @@
-# Interactive Code Viewer README
+# Interactive Code Viewer
 
-This extension provides an interactive code viewing experience directly within Visual Studio Code. Simply open a text file containing code, and use the Enter key to display each line sequentially. Perfect for code walkthroughs, presentations, and interactive learning.
+Interactive Code Viewer is a Visual Studio Code extension that lets you reveal the contents of a source code file one line at a time. Instead of displaying an entire file at once, the extension inserts each line into the active editor whenever you press **Enter**.
+
+This makes it useful for live coding sessions, classroom demonstrations, presentations, and explaining code step by step without exposing the complete implementation immediately.
 
 ## Features
 
-- Sequential display of code lines with the press of the Enter key.
-- Seamless integration with Visual Studio Code's editor.
-- Suitable for code walkthroughs, presentations, and interactive learning sessions.
+- Reveal source code one line at a time.
+- Display code progressively by pressing **Enter**.
+- Works with any plain text or source code file.
+- Lightweight with no additional configuration required.
+- Ideal for teaching, presentations, interviews, and interactive code walkthroughs.
 
 ## Requirements
 
-This extension requires Visual Studio Code version 1.87.0 or higher.
+- Visual Studio Code **1.87.0** or later.
 
-## Extension Settings
+## How to Use
 
-This extension does not contribute any settings at the moment.
+1. Open an empty file (or the file where you want the code to be displayed).
+2. Open the Command Palette (`Ctrl + Shift + P`).
+3. Run **Interactive Code**.
+4. Enter the path of the source file you want to display.
+5. Press **Enter** repeatedly to reveal each line of the source file.
 
-## Known Issues
+## Example Workflow
 
-- None at the moment.
+Source file:
+
+```javascript
+function greet(name) {
+  console.log(`Hello, ${name}`);
+}
+
+greet("World");
+```
+
+After starting the extension:
+
+**First Enter**
+
+```javascript
+function greet(name) {
+```
+
+**Second Enter**
+
+```javascript
+function greet(name) {
+    console.log(`Hello, ${name}`);
+```
+
+Continue pressing **Enter** until the entire file has been displayed.
+
+## Known Limitations
+
+- The extension currently appends each revealed line to the end of the active editor.
+- The source file must exist and be accessible from the provided path.
 
 ## Release Notes
 
+### 0.0.2
+
+- Fixed an issue where the extension could not be started more than once without restarting the Extension Development Host.
+- Improved command registration to prevent duplicate command errors.
+- Improved file loading and error handling.
+- Enhanced extension stability and overall user experience.
+
 ### 0.0.1
 
-Initial release of the Interactive Code Viewer extension.
+- Initial release of Interactive Code Viewer.
+- Supports progressive line-by-line code display using the Enter key.
+
+## Repository
+
+GitHub: https://github.com/Grey-Hat-Guy/Interactive-Code-Viewer
 
 ---
 
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-- Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-- Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-- Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
-
-## For more information
-
-- [GitHub Repository](https://github.com/Grey-Hat-Guy/Interactive-Code-Viewer)
-- [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-- [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+If you find this extension useful or have suggestions for improvements, feel free to open an issue or contribute to the project.

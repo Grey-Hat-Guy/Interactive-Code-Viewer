@@ -1,75 +1,101 @@
-const vscode = require('vscode');
-const fs = require('fs');
+const vscode = require("vscode");
+const fs = require("fs");
+const path = require("path");
+
+let lines = [];
+let currentLine = 0;
+let editor = null;
+let interactiveMode = false;
 
 function activate(context) {
-    console.log('Extension activated.');
+  // Start Interactive Mode
+  const startCommand = vscode.commands.registerCommand(
+    "dev-interactive-code.interactiveCodeViewer",
+    async () => {
+      const filePath = await vscode.window.showInputBox({
+        prompt: "Enter source file path",
+        placeHolder: "C:\\Users\\GreyHat\\Desktop\\demo.js",
+      });
 
-    let disposable = vscode.commands.registerCommand('dev-interactive-code.interactiveCodeViewer', async () => {
-        const filePath = await vscode.window.showInputBox({
-            prompt: 'Enter the file path',
-            value: '', // Default value
-            placeHolder: 'e.g., ./style.css',
-        });
+      if (!filePath) {
+        return;
+      }
 
-        if (filePath) {
-            const fileContents = fs.readFileSync(filePath, 'utf8');
-            let lines = fileContents.split(/\r?\n/);
-            console.log('Lines:', lines);
+      try {
+        const fullPath = path.resolve(filePath);
 
-            let currentLineIndex = 0;
-            let insertedLines = [];
-            let undoneLines = [];
-
-            const editor = vscode.window.activeTextEditor;
-            if (editor) {
-                // Bind Enter key press event
-                let disposable = vscode.commands.registerCommand('type', () => {
-                    if (currentLineIndex < lines.length) {
-                        const lineText = lines[currentLineIndex];
-                        editor.edit(editBuilder => {
-                            editBuilder.insert(new vscode.Position(editor.document.lineCount, 0), lineText + '\n');
-                        }).then(() => {
-                            insertedLines.push(lineText);
-                            currentLineIndex++;
-                        });
-                    } else {
-                        vscode.window.showInformationMessage('All lines inserted.');
-                    }
-                });
-                context.subscriptions.push(disposable);
-
-                // Bind text document change event to track undoing of insertions
-                let disposable2 = vscode.workspace.onDidChangeTextDocument(event => {
-                    if (event.contentChanges.length === 1 && event.contentChanges[0].text === '') {
-                        // Undo action detected
-                        if (insertedLines.length > 0) {
-                            let undoneLine = insertedLines.pop();
-                            undoneLines.push(undoneLine);
-                            currentLineIndex--;
-                        }
-                    }
-                });
-                context.subscriptions.push(disposable2);
-
-                // Bind Enter key press event to re-display the last inserted line
-                vscode.commands.registerCommand('extension.reInsertLastLine', () => {
-                    if (undoneLines.length > 0) {
-                        let reInsertedLine = undoneLines.pop();
-                        editor.edit(editBuilder => {
-                            editBuilder.insert(new vscode.Position(editor.document.lineCount, 0), reInsertedLine + '\n');
-                        }).then(() => {
-                            insertedLines.push(reInsertedLine);
-                            currentLineIndex++;
-                        });
-                    }
-                });
-            }
+        if (!fs.existsSync(fullPath)) {
+          vscode.window.showErrorMessage("File not found.");
+          return;
         }
+
+        const content = fs.readFileSync(fullPath, "utf8");
+
+        lines = content.split(/\r?\n/);
+        currentLine = 0;
+
+        editor = vscode.window.activeTextEditor;
+
+        if (!editor) {
+          vscode.window.showErrorMessage("Open an empty file first.");
+          return;
+        }
+
+        interactiveMode = true;
+
+        vscode.window.showInformationMessage(
+          `Loaded ${lines.length} lines. Press Enter to reveal code.`,
+        );
+      } catch (err) {
+        vscode.window.showErrorMessage(err.message);
+      }
+    },
+  );
+
+  context.subscriptions.push(startCommand);
+
+  // Intercept typing
+  const typeCommand = vscode.commands.registerCommand("type", async (args) => {
+    // If interactive mode is OFF
+    // let VSCode behave normally
+    if (!interactiveMode) {
+      return vscode.commands.executeCommand("default:type", args);
+    }
+
+    // Only intercept ENTER
+    if (args.text !== "\n" && args.text !== "\r") {
+      return vscode.commands.executeCommand("default:type", args);
+    }
+
+    if (!editor) {
+      interactiveMode = false;
+      return;
+    }
+
+    if (currentLine >= lines.length) {
+      interactiveMode = false;
+
+      vscode.window.showInformationMessage("Finished displaying file.");
+
+      return;
+    }
+
+    await editor.edit((edit) => {
+      edit.insert(
+        new vscode.Position(editor.document.lineCount, 0),
+        lines[currentLine] + "\n",
+      );
     });
 
-    context.subscriptions.push(disposable);
+    currentLine++;
+  });
+
+  context.subscriptions.push(typeCommand);
 }
 
+function deactivate() {}
+
 module.exports = {
-    activate
+  activate,
+  deactivate,
 };
